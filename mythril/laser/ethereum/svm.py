@@ -368,7 +368,7 @@ class LaserEVM:
             )
 
             log.debug("Starting new transaction %s", start_signal.transaction)
-
+            self._add_caller_nonce(start_signal.transaction, new_global_state)
             return [new_global_state], op_code
 
         except TransactionEndSignal as end_signal:
@@ -410,6 +410,14 @@ class LaserEVM:
         self._execute_post_hook(op_code, new_global_states)
 
         return new_global_states, op_code
+
+    def _add_caller_nonce(
+        self,
+        transaction,
+        global_state: GlobalState,
+    ):
+        caller = transaction.caller
+        global_state.world_state.accounts[caller.value].nonce += 1
 
     def _end_message_call(
         self,

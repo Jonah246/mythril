@@ -201,8 +201,14 @@ class ContractCreationTransaction(BaseTransaction):
         contract_address = (
             contract_address if isinstance(contract_address, int) else None
         )
+        if caller.value not in world_state.accounts.keys():
+            
+            world_state.create_account(
+                balance=0, address=caller.value
+            )
+        caller_account = world_state.accounts[caller.value]
         callee_account = world_state.create_account(
-            0, concrete_storage=True, creator=caller.value, address=contract_address
+            0, concrete_storage=True, creator=caller.value, address=contract_address, nonce=caller_account.nonce,
         )
         callee_account.contract_name = contract_name or callee_account.contract_name
         # init_call_data "should" be false, but it is easier to model the calldata symbolically

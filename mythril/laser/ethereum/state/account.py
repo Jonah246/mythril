@@ -184,4 +184,5 @@ class Account:
         )
         new_account.storage = deepcopy(self.storage)
         new_account.code = self.code
+        new_account.nonce = self.nonce
         return new_account
