@@ -165,6 +165,9 @@ def _setup_global_state_for_execution(laser_evm, transaction: BaseTransaction) -
     global_state.world_state.constraints.append(
         Or(*[transaction.caller == actor for actor in ACTORS.addresses.values()])
     )
+    caller = transaction.caller
+    global_state.world_state.accounts[caller.value].nonce += 1
+    # log.debug("caller address: %s when setting up global state", caller.address)
 
     new_node = Node(
         global_state.environment.active_account.contract_name,
