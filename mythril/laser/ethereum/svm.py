@@ -417,7 +417,12 @@ class LaserEVM:
         global_state: GlobalState,
     ):
         caller = transaction.caller
-        global_state.world_state.accounts[caller.value].nonce += 1
+        try:
+            if caller not in global_state.world_state.accounts:
+                global_state.world_state.create_account(address=caller.value)
+            global_state.world_state.accounts[caller.value].nonce += 1
+        except:
+            pass
 
     def _end_message_call(
         self,

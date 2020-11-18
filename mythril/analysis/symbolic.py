@@ -59,6 +59,7 @@ class SymExecWrapper:
         disable_dependency_pruning: bool = False,
         run_analysis_modules: bool = True,
         custom_modules_directory: str = "",
+        world_state: Optional[WorldState] = None,
     ):
         """
 
@@ -140,7 +141,9 @@ class SymExecWrapper:
 
         plugin_loader.instrument_virtual_machine(self.laser, None)
 
-        world_state = WorldState()
+        if world_state is None:
+            world_state = WorldState()
+
         for account in self.accounts.values():
             world_state.put_account(account)
 

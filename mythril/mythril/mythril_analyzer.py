@@ -5,6 +5,7 @@ import logging
 import traceback
 from typing import Optional, List
 
+from mythril.laser.ethereum.state.world_state import WorldState
 from mythril.laser.ethereum.iprof import InstructionProfiler
 from . import MythrilDisassembler
 from mythril.support.source_support import Source
@@ -133,6 +134,8 @@ class MythrilAnalyzer:
         self,
         modules: Optional[List[str]] = None,
         transaction_count: Optional[int] = None,
+        contract_name: Optional[str] = None,
+        world_state: Optional[WorldState] = None,
     ) -> Report:
         """
         :param modules: The analysis modules which should be executed
@@ -144,6 +147,8 @@ class MythrilAnalyzer:
         exceptions = []
         execution_info = None  # type: Optional[List[ExecutionInfo]]
         for contract in self.contracts:
+            if contract_name and contract.name != contract_name:
+                continue
             StartTime()  # Reinitialize start time for new contracts
             try:
                 sym = SymExecWrapper(
